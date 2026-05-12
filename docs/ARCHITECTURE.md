@@ -188,7 +188,8 @@ lumen.local {
 
 ## 12. Extension points / open questions
 
-- **Macro goals.** `users` only has `calorie_goal`. Macro goals are currently hallucinated by the model in the chat summary; the Dashboard intentionally shows consumed values only. Adding `protein_g_goal` etc. is a 1-line schema change + onboarding form addition + system prompt update.
+- **Macro goals.** `users` only has `calorie_goal`. Macro goals are currently hallucinated by the model in the chat summary; the Dashboard intentionally shows consumed values only. As of 0.3.0 the Setup form is visually scaffolded with a "Daily goals" section so adding `protein_g_goal` / `carbs_g_goal` / `fat_g_goal` is now just a schema migration + three input fields + a prompt update.
+- **Design system pairing.** A Google Stitch project is paired with this repo for UI iteration. Mockups for all six current screens are stored there with the `Lumen Dark` design system. Stitch's M3 token derivation deviates slightly from the Tailwind tokens (e.g. caps card-radius at 8px, lavender-tints subtle text), so when porting Stitch output into React, treat the mockups as visual reference and keep our own Tailwind tokens (`bg`, `card`, `muted`, `accent`, `accentSoft`, `text`, `subtle`) as the source of truth.
 - **Multi-user / auth.** Everything assumes `user_id=1`. The schema already carries `user_id` on each table, so adding auth is mostly a routes-layer change.
 - **Vision on Groq.** Groq has multimodal models (`meta-llama/llama-4-scout-…`) — the dispatch in `llm.py` could route image-bearing requests to a vision-capable model and text-only ones to the fast 8B, all on Groq.
 - **Profile pruning.** The dynamic profile grows list-additively. Over time it accumulates low-signal entries. No automatic prune yet; periodic manual review of `user_profile.json` is the recommended workflow.

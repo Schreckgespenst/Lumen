@@ -61,9 +61,9 @@ export default function Chat() {
         )}
         {messages.map((m) => (
           <div key={m.id ?? `${m.role}-${m.created_at}`}
-               className={`rounded-2xl p-3 ${m.role === 'user' ? 'bg-accentSoft self-end ml-12' : 'bg-card border border-muted mr-12'}`}>
-            <div className="text-xs uppercase tracking-wide text-subtle mb-1">{m.role}</div>
-            <div className="markdown text-sm leading-relaxed">
+               className={`rounded-2xl p-4 ${m.role === 'user' ? 'bg-accentSoft self-end ml-12' : 'bg-card border border-muted mr-12'}`}>
+            <div className="text-[10px] uppercase tracking-[0.12em] text-subtle mb-1.5">{m.role}</div>
+            <div className="markdown text-sm leading-relaxed tnum">
               <ReactMarkdown>{m.content || ''}</ReactMarkdown>
             </div>
           </div>

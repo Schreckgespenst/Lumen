@@ -2,18 +2,32 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api.js'
 
-const FIELDS = [
-  { name: 'name', label: 'Name', type: 'text', required: true },
-  { name: 'age', label: 'Age', type: 'number', required: true },
-  { name: 'height_cm', label: 'Height (cm)', type: 'number', step: '0.1', required: true },
-  { name: 'weight_kg', label: 'Weight (kg)', type: 'number', step: '0.1', required: true },
-  { name: 'sex', label: 'Biological sex', type: 'select',
-    options: ['male', 'female', 'other'], required: true },
-  { name: 'activity_level', label: 'Activity level', type: 'select',
-    options: ['sedentary', 'light', 'moderate', 'active', 'very active'], required: true },
-  { name: 'calorie_goal', label: 'Daily calorie goal (kcal)', type: 'number', required: true },
-  { name: 'body_fat_pct', label: 'Body fat % (optional)', type: 'number', step: '0.1' },
-  { name: 'bmr', label: 'BMR (optional)', type: 'number' },
+const SECTIONS = [
+  {
+    fields: [
+      { name: 'name', label: 'Name', type: 'text', required: true },
+      { name: 'age', label: 'Age', type: 'number', required: true },
+      { name: 'height_cm', label: 'Height (cm)', type: 'number', step: '0.1', required: true },
+      { name: 'weight_kg', label: 'Weight (kg)', type: 'number', step: '0.1', required: true },
+      { name: 'sex', label: 'Biological sex', type: 'select',
+        options: ['male', 'female', 'other'], required: true },
+      { name: 'activity_level', label: 'Activity level', type: 'select',
+        options: ['sedentary', 'light', 'moderate', 'active', 'very active'], required: true },
+    ],
+  },
+  {
+    label: 'Daily goals',
+    fields: [
+      { name: 'calorie_goal', label: 'Calorie goal (kcal)', type: 'number', required: true },
+    ],
+  },
+  {
+    label: 'Optional',
+    fields: [
+      { name: 'body_fat_pct', label: 'Body fat %', type: 'number', step: '0.1' },
+      { name: 'bmr', label: 'BMR', type: 'number' },
+    ],
+  },
 ]
 
 export default function Setup() {
@@ -71,31 +85,42 @@ export default function Setup() {
   return (
     <div className="max-w-xl mx-auto">
       <h1 className="text-3xl font-semibold mb-1">Set up your profile</h1>
-      <p className="text-subtle mb-6">Lumen uses this to ground every reply from the local model.</p>
-      <form onSubmit={onSubmit} className="space-y-4 bg-card rounded-2xl p-6 border border-muted">
-        {FIELDS.map((f) => (
-          <div key={f.name} className="grid grid-cols-3 items-center gap-3">
-            <label htmlFor={f.name} className="col-span-1 text-sm text-subtle">{f.label}</label>
-            {f.type === 'select' ? (
-              <select
-                id={f.name} name={f.name}
-                value={form[f.name] ?? ''}
-                onChange={onChange}
-                required={f.required}
-                className="col-span-2 bg-muted rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent"
-              >
-                <option value="" disabled>Select…</option>
-                {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
-              </select>
-            ) : (
-              <input
-                id={f.name} name={f.name} type={f.type} step={f.step}
-                value={form[f.name] ?? ''}
-                onChange={onChange}
-                required={f.required}
-                className="col-span-2 bg-muted rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent"
-              />
+      <p className="text-subtle mb-6">Lumen uses this to ground every reply from the AI.</p>
+      <form onSubmit={onSubmit} className="space-y-5 bg-card rounded-2xl p-6 border border-muted">
+        {SECTIONS.map((section, i) => (
+          <div key={i} className="space-y-4">
+            {section.label && (
+              <div className="pt-2 border-t border-muted">
+                <div className="text-xs uppercase tracking-wide text-subtle mt-3 mb-1">
+                  {section.label}
+                </div>
+              </div>
             )}
+            {section.fields.map((f) => (
+              <div key={f.name} className="grid grid-cols-3 items-center gap-3">
+                <label htmlFor={f.name} className="col-span-1 text-sm text-subtle">{f.label}</label>
+                {f.type === 'select' ? (
+                  <select
+                    id={f.name} name={f.name}
+                    value={form[f.name] ?? ''}
+                    onChange={onChange}
+                    required={f.required}
+                    className="col-span-2 bg-muted rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent"
+                  >
+                    <option value="" disabled>Select…</option>
+                    {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
+                  </select>
+                ) : (
+                  <input
+                    id={f.name} name={f.name} type={f.type} step={f.step}
+                    value={form[f.name] ?? ''}
+                    onChange={onChange}
+                    required={f.required}
+                    className="col-span-2 bg-muted rounded-lg px-3 py-2 tnum outline-none focus:ring-2 focus:ring-accent"
+                  />
+                )}
+              </div>
+            ))}
           </div>
         ))}
         {error && <div className="text-red-400 text-sm">{error}</div>}

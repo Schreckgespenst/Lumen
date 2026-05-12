@@ -29,17 +29,20 @@ export default function Dashboard() {
 
       <div className="bg-card rounded-2xl border border-muted p-6 space-y-4">
         <div>
-          <div className="flex justify-between items-end mb-2">
+          <div className="flex justify-between items-end mb-3">
             <div>
-              <div className="text-subtle text-sm">Today</div>
-              <div className="text-2xl font-semibold">
-                {Math.round(consumed)} <span className="text-subtle text-base">/ {goal} kcal</span>
+              <div className="text-subtle text-xs uppercase tracking-wide">Today</div>
+              <div className="text-3xl font-semibold tnum mt-1">
+                {Math.round(consumed).toLocaleString()}
+                <span className="text-subtle text-base font-normal"> / {goal.toLocaleString()} kcal</span>
               </div>
             </div>
-            <div className="text-right text-sm text-subtle">{Math.round(remaining)} kcal left</div>
+            <div className="text-right text-sm text-subtle tnum">
+              {Math.round(remaining).toLocaleString()} kcal left
+            </div>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div className="h-full bg-accent" style={{ width: `${pct}%` }} />
+            <div className="h-full bg-accent transition-all" style={{ width: `${pct}%` }} />
           </div>
         </div>
 
@@ -63,8 +66,8 @@ function MacroStat({ label, value }) {
   return (
     <div className="text-center">
       <div className="text-subtle text-xs uppercase tracking-wide">{label}</div>
-      <div className="text-lg font-medium mt-0.5">
-        {Math.round(value)}<span className="text-subtle text-sm ml-0.5">g</span>
+      <div className="text-lg font-medium mt-0.5 tnum">
+        {Math.round(value)}<span className="text-subtle text-sm ml-0.5 font-normal">g</span>
       </div>
     </div>
   )

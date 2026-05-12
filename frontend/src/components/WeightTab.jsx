@@ -88,9 +88,9 @@ export default function WeightTab() {
           <ul>
             {[...rows].reverse().map((r) => (
               <li key={r.id} className="px-4 py-2 flex justify-between text-sm border-t border-muted/50">
-                <div>{new Date(r.logged_at).toLocaleString()}</div>
+                <div className="tnum text-subtle">{new Date(r.logged_at).toLocaleString()}</div>
                 <div className="flex items-center gap-3">
-                  <div>{r.weight_kg.toFixed(1)} kg</div>
+                  <div className="tnum">{r.weight_kg.toFixed(1)} kg</div>
                   <button
                     onClick={async () => { await api.deleteWeight(r.id); refresh() }}
                     className="text-subtle hover:text-red-400 text-xs"

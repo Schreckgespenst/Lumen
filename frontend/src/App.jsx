@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, Link, NavLink, useLocation } from 'react-router-dom'
 import Setup from './pages/Setup.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Tracker from './pages/Tracker.jsx'
@@ -28,11 +28,11 @@ export default function App() {
         <Link to="/" className="text-2xl font-semibold tracking-tight">
           Lumen
         </Link>
-        <nav className="flex gap-4 text-sm text-subtle">
-          <Link to="/" className="hover:text-text">Dashboard</Link>
-          <Link to="/tracker" className="hover:text-text">Tracker</Link>
-          <Link to="/chat" className="hover:text-text">Chat</Link>
-          <Link to="/setup" className="hover:text-text">Settings</Link>
+        <nav className="flex gap-5 text-sm">
+          <NavItem to="/" end>Dashboard</NavItem>
+          <NavItem to="/chat">Chat</NavItem>
+          <NavItem to="/tracker">Tracker</NavItem>
+          <NavItem to="/setup">Settings</NavItem>
         </nav>
       </header>
       <main className="px-6 py-6 max-w-5xl mx-auto">
@@ -53,5 +53,19 @@ export default function App() {
         </Routes>
       </main>
     </div>
+  )
+}
+
+function NavItem({ to, end, children }) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      className={({ isActive }) =>
+        isActive ? 'text-accent font-medium' : 'text-subtle hover:text-text transition'
+      }
+    >
+      {children}
+    </NavLink>
   )
 }

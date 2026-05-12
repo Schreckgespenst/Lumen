@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-13
+
+### Added
+- Paired **Google Stitch** project + design system (`Lumen Dark`) and high-fidelity mockups for all six current screens: Chat, Dashboard, Setup, and the three Tracker tabs (Calories, Weight, Measurements). The design system is dark-only, accent `#a855f7`, Inter throughout, with the visual language captured in a markdown spec that ships with the asset.
+- `.tnum` utility in [`frontend/src/index.css`](frontend/src/index.css) for `font-variant-numeric: tabular-nums`. Applied to every numeric cell in the UI so columns of numbers no longer dance when digits change.
+
+### Changed
+- **Typography:** Inter is now the global font, loaded from Google Fonts in [`frontend/index.html`](frontend/index.html). Replaces the prior system-sans stack.
+- **Top nav active state:** `NavLink` replaces `Link`; the active route renders in accent purple instead of just hover-grey. Routes reordered to Dashboard / Chat / Tracker / Settings.
+- **Dashboard** Today block: section label is uppercase tracking-wide; consumed kcal is `text-3xl` with `Number.toLocaleString()` for comma grouping. Macro grid values use tabular nums.
+- **Setup** form: fields are grouped into three sections with subtle dividers labelled "Daily goals" and "Optional", matching the Stitch mockup hierarchy. Visually scaffolded for the missing macro-goal fields (see Notes).
+- **Chat** bubble: role label tightened (smaller, wider letter-spacing); padding 12px → 16px; markdown bodies use tabular nums so kcal/macros in the assistant's reply line up.
+
+### Notes
+- The Setup form is scaffolded for `protein_g_goal` / `carbs_g_goal` / `fat_g_goal` but the actual inputs aren't wired yet — `backend/schemas.UserSetup` and `backend/models.User` still only carry `calorie_goal`. Wiring those three fields end-to-end is the next move on the long-standing macro-goals item.
+
 ## [0.2.0] - 2026-05-13
 
 ### Added

@@ -57,16 +57,16 @@ export default function CaloriesTab() {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="bg-muted rounded-lg px-3 py-2 text-sm"
+          className="bg-muted rounded-lg px-3 py-2 text-sm tnum"
         />
-        <div className="text-subtle text-sm">Total: <span className="text-text">{Math.round(total)} kcal</span></div>
+        <div className="text-subtle text-sm">Total: <span className="text-text tnum">{Math.round(total).toLocaleString()} kcal</span></div>
       </div>
 
       {grouped.map(({ meal: m, items }) => (
         <div key={m} className="bg-card rounded-2xl border border-muted">
           <div className="px-4 py-3 border-b border-muted flex justify-between">
             <div className="font-medium">{m}</div>
-            <div className="text-subtle text-sm">
+            <div className="text-subtle text-sm tnum">
               {Math.round(items.reduce((s, r) => s + (r.kcal || 0), 0))} kcal
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function CaloriesTab() {
                     {it.notes && <div className="text-subtle text-xs">{it.notes}</div>}
                   </div>
                   <div className="flex items-center gap-3">
-                    <div>{Math.round(it.kcal)} kcal</div>
+                    <div className="tnum">{Math.round(it.kcal)} kcal</div>
                     <button
                       onClick={() => onDelete(it.id)}
                       className="text-subtle hover:text-red-400 text-xs"
