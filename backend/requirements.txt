@@ -4,4 +4,6 @@ sqlalchemy>=2.0.40
 pydantic>=2.13.0
 python-multipart>=0.0.20
 ollama>=0.4.7
+groq>=0.13.0
 pillow>=12.0.0
+python-dotenv>=1.0.1

@@ -18,23 +18,35 @@ The name plays on the model giving "light" to your numbers — a small, local as
 
 ## Prerequisites
 
-1. **Ollama** — https://ollama.com/download
-2. A Gemma model. The shipped default is `gemma4` (matches your existing `gemma_test.py`). Override with `LUMEN_MODEL` env var if you have a different tag.
+- **Python 3.11+** and **Node 20+**.
+- One LLM backend (configurable via env var):
 
-   ```powershell
-   ollama pull gemma3n:e4b      # multimodal, ~7GB, recommended
-   # or
-   ollama pull gemma3n:e2b      # smaller fallback
-   ollama serve                  # if not already running
-   ```
+### LLM backend — pick one
 
-   Then either tag it to match the default name or set the env var:
+Set `LUMEN_BACKEND` to either `groq` (recommended for speed) or `ollama` (fully local).
 
-   ```powershell
-   $env:LUMEN_MODEL = "gemma3n:e4b"
-   ```
+#### Option A — Groq (cloud, fast, free tier)
 
-3. **Python 3.11+** and **Node 20+**.
+```powershell
+$env:LUMEN_BACKEND = "groq"
+$env:GROQ_API_KEY  = "gsk_..."        # https://console.groq.com/keys
+$env:LUMEN_MODEL   = "llama-3.1-8b-instant"   # optional; this is the default
+```
+
+Sub-second responses, no local GPU/disk burn. The free tier is generous enough for personal use. Trade-off: not local — requests leave your machine.
+
+#### Option B — Ollama (fully local)
+
+```powershell
+# install ollama from https://ollama.com/download
+ollama pull gemma3n:e4b   # ~7GB, multimodal, recommended
+# or ollama pull gemma3n:e2b   # smaller fallback
+
+$env:LUMEN_BACKEND = "ollama"
+$env:LUMEN_MODEL   = "gemma3n:e4b"
+```
+
+Slower (Gemma 3n on CPU = several seconds per turn), but nothing leaves the machine. Multimodal food photos work here; on the Groq 8B path image inputs are ignored with a polite note.
 
 ---
 
@@ -65,6 +77,24 @@ npm run dev
 Open http://localhost:5173. The Vite dev server proxies `/api/*` to `http://localhost:8000`.
 
 First load redirects to **/setup** until you save a profile.
+
+### Install as a PWA (Android / desktop Chrome)
+
+The frontend is a PWA — once running, you can install it to your home screen / app drawer.
+
+- **Desktop Chrome / Edge:** the address bar shows an **Install** icon (or `≡ → Install Lumen…`).
+- **Android Chrome:** menu → **Add to Home screen** → **Install**.
+- **iOS Safari:** **Share → Add to Home Screen** (Safari doesn't show the install prompt — manual only).
+
+Service worker only registers on production builds and over HTTPS or `localhost`. For an actual install on another device on your LAN (e.g. once the backend is on a Raspberry Pi), do:
+
+```powershell
+cd frontend
+npm run build       # outputs to frontend/dist with the service worker baked in
+npm run preview     # serves the production build on :4173 for testing
+```
+
+For the Pi deployment, you'll want to serve `frontend/dist` through Caddy / Nginx with TLS (Caddy auto-renews Let's Encrypt). Then `LUMEN_BACKEND=groq` keeps the Pi's job to almost nothing — it just shuffles JSON.
 
 ---
 
@@ -111,7 +141,7 @@ DELETE /api/measurements/{id}
 ## Known limitations & next steps
 
 - **Single user, no auth.** All entries use `user_id=1`.
-- **Strict JSON output depends on the model.** Gemma `e4b` is much more reliable than `e2b` for the structured calorie format. The backend falls back to a plain markdown reply (with no DB writes) when JSON parsing fails — so a weaker model is degraded, not broken.
+- **Strict JSON output depends on the model.** On Groq, `llama-3.1-8b-instant` with `response_format=json_object` is rock solid. On Ollama, Gemma `e4b` is much more reliable than `e2b` for the structured calorie format. The backend falls back to a plain markdown reply (with no DB writes) when JSON parsing fails — so a weaker model is degraded, not broken.
 - **Multimodal food photos** route through Ollama's `images` channel. Quality depends entirely on the underlying model — treat the first numbers it gives as a starting estimate, not gospel.
 - **No external nutrition database.** All estimates come from the LLM, so verify before trusting macros on edge-case foods.
 - **Profile-learning loop is experimental.** Async, best-effort, list-additive only — it won't drop facts unexpectedly, but it can grow the profile with low-signal entries over time. Inspect `backend/user_profile.json` and prune as needed.

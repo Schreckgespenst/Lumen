@@ -1,8 +1,14 @@
+from pathlib import Path
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database import init_db
-from .routes import profile, chat, food, weight, measurements
+# Load backend/.env before anything that reads os.environ (e.g. llm.py).
+load_dotenv(Path(__file__).resolve().parent / ".env")
+
+from .database import init_db  # noqa: E402
+from .routes import profile, chat, food, weight, measurements  # noqa: E402
 
 app = FastAPI(title="Lumen — Local LLM Fitness Tracker", version="0.1.0")
 

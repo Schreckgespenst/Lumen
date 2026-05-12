@@ -3,7 +3,14 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Secrets — catch every name variant we might have used
 .env
+.env.*
+!.env.example
+**/env
+**/env.local
+**/env.ps1
 
 # Node
 node_modules/
